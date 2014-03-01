@@ -1,3 +1,6 @@
+from copy import copy
+from datetime import datetime, timedelta
+
 from sqlalchemy import Column, Integer, String, Text, Date, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
@@ -50,14 +53,53 @@ class Event(Base):
             self.start_date.strftime('%d-%m-%Y %H:%M'))
         
     def __init__(self, title, description, start_date, owner, location, 
-                 end_date=None, repetition_pattern=0):
+                 end_date=None, repetition_pattern=REPETITION_NONE):
         self.title = title
         self.description = description
         self.start_date = start_date
         self.end_date = end_date
         self.owner = owner
-        self.repetiton_pattern = repetition_pattern
+        self.repetition_pattern = repetition_pattern
         self.location = location
+        
+    def resolve_repetitions(self, future):
+        if self.repetition_pattern == Event.REPETITION_NONE:
+            return [self]
+        elif self.repetition_pattern == Event.REPETITION_WEEKLY:
+            events = [self]
+            lastdate = self.start_date
+            counter = 0
+            while lastdate + timedelta(weeks=1) <= datetime.now() + future:
+                counter += 1
+                new_event = copy(self)
+                new_event.start_date += timedelta(weeks=1*counter)
+                if new_event.end_date is not None:
+                    new_event.end_date += timedelta(weeks=1*counter)
+                # import pdb; pdb.set_trace()
+                lastdate = new_event.start_date
+                events.append(new_event)
+            return events
+        elif self.repetition_pattern == Event.REPETITION_BIWEEKLY:
+            events = [self]
+            lastdate = self.start_date
+            counter = 0
+            while lastdate + timedelta(weeks=2) <= datetime.now() + future:
+                counter += 1
+                new_event = copy(self)
+                new_event.start_date += timedelta(weeks=2*counter)
+                if new_event.end_date is not None:
+                    new_event.end_date += timedelta(weeks=2*counter)
+                # import pdb; pdb.set_trace()
+                lastdate = new_event.start_date
+                events.append(new_event)
+            return events
+        else:
+            raise NotImplementedError("Unknown Repetition Pattern: %i" % 
+                                      self.repetition_pattern)
+
+
+                
+                
 
 class Location(Base):
     __tablename__ = 'location'
