@@ -65,7 +65,7 @@ class Event(Base):
         self.repetition_pattern = repetition_pattern
         self.location = location
         
-    def resolve_repetitions(self, future):
+    def resolve_repetitions(self, future=timedelta(days=90)):
         if self.repetition_pattern == Event.REPETITION_NONE:
             return [self]
         elif self.repetition_pattern == Event.REPETITION_WEEKLY:
