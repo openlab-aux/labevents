@@ -6,10 +6,11 @@ from sqlalchemy.orm import relationship
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from flask.ext.login import UserMixin
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
-class User(Base):
+class User(Base, UserMixin):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
