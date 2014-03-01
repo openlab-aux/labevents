@@ -1,7 +1,7 @@
 from unittest import TestCase
 from datetime import datetime, timedelta
 
-from labevents.models import Event, User, Location
+from labevents.models import Event, User, Location, Cancelation
 
 class TestRepetitions(TestCase):
     def setUp(self):
@@ -32,3 +32,11 @@ class TestRepetitions(TestCase):
         self.event.repetition_pattern = Event.REPETITION_BIWEEKLY
         events = self.event.resolve_repetitions(future=timedelta(weeks=5))
         self.assertEqual(len(events), 3)
+        
+    def test_cancelation(self):
+        self.event.repetition_pattern = Event.REPETITION_WEEKLY
+        self.event.cancelations = [ Cancelation(
+            (self.event.start_date+timedelta(weeks=1)).date(), "lel")
+        ]
+        events = self.event.resolve_repetitions(future=timedelta(weeks=5))
+        self.assertEqual(len(events), 5)

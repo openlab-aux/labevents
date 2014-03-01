@@ -78,7 +78,6 @@ class Event(Base):
                 # import pdb; pdb.set_trace()
                 lastdate = new_event.start_date
                 events.append(new_event)
-            return events
         elif self.repetition_pattern == Event.REPETITION_BIWEEKLY:
             events = [self]
             lastdate = self.start_date
@@ -92,14 +91,11 @@ class Event(Base):
                 # import pdb; pdb.set_trace()
                 lastdate = new_event.start_date
                 events.append(new_event)
-            return events
         else:
             raise NotImplementedError("Unknown Repetition Pattern: %i" % 
                                       self.repetition_pattern)
-
-
-                
-                
+        return filter(lambda event: event.start_date.date() not in [ 
+            c.date for c in event.cancelations ], events)       
 
 class Location(Base):
     __tablename__ = 'location'
@@ -114,6 +110,7 @@ class Location(Base):
         self.name = name
         self.address = address
     
+
 class Cancelation(Base):
     __tablename__ = 'cancelation'
     id = Column(Integer, primary_key=True)
@@ -124,3 +121,7 @@ class Cancelation(Base):
     
     def __repr__(self):
         return "<Cancelation for '%s'>" % self.date.strftime('%m-%d-%Y')
+
+    def __init__(self, date, reason):
+        self.date = date
+        self.reason = reason
