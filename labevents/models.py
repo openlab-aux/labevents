@@ -32,6 +32,7 @@ class Event(Base):
     description = Column(Text)
     start_date = Column(DateTime)
     end_date = Column(DateTime)
+    image_path = Column(String)
 
     REPETITION_NONE = 0
     REPETITION_WEEKLY = 1
@@ -53,12 +54,14 @@ class Event(Base):
             self.start_date.strftime('%d-%m-%Y %H:%M'))
         
     def __init__(self, title, description, start_date, owner, location, 
-                 end_date=None, repetition_pattern=REPETITION_NONE):
+                 end_date=None, repetition_pattern=REPETITION_NONE,
+                 image_path="/static/openlab.png"):
         self.title = title
         self.description = description
         self.start_date = start_date
         self.end_date = end_date
         self.owner = owner
+        self.image_path = image_path
         self.repetition_pattern = repetition_pattern
         self.location = location
         
