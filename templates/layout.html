@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>lab:events</title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <!-- Bootstrap -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+    <link href="/static/bootstrap/css/datetimepicker.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/bootstrap-wysihtml5.css" rel="stylesheet">
+
+
+    <style type="text/css">
+
+      /* Sticky footer styles
+      -------------------------------------------------- */
+
+      html,
+      body {
+        height: 100%;
+        /* The html and body elements cannot have any padding or margin. */
+      }
+
+      /* Wrapper for page content to push down footer */
+      #wrap {
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        /* Negative indent footer by it's height */
+        margin: 0 auto -60px;
+      }
+
+      /* Set the fixed height of the footer here */
+      #push,
+      #footer {
+        height: 60px;
+      }
+      #footer {
+        background-color: #f5f5f5;
+      }
+
+      /* Lastly, apply responsive CSS fixes as necessary */
+      @media (max-width: 767px) {
+        #footer {
+          margin-left: -20px;
+          margin-right: -20px;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+      }
+
+      /* custom style */
+      .row {
+          margin-top: 50px;
+      }
+
+      .center {
+        float: none;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+    </style>
+</head>
+<body>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+    <div id="wrap">
+        <div class="container">
+            <div class="page-header">
+                <h1><b class="icon-time"></b>lab:events <small> Die nächsten Termine im OpenLab Augsburg</small></h1>
+            </div>
+        {% block content %}
+        {% endblock %}
+
+            <div id="push"></div>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <p class="muted credit">.Contents CC-BY-ND OpenLab Augsburg e.V. Application copyright 2013 by Johannes F&uuml;rmann. Released under AGPL. Bydon Bowerd. Heavily Bootstrapped.</i><p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="span12">
+    <h3>{{ event.title }}</h3>  
+    </div>  
+</div>
+    <div class="row">
+	 <div class="span2">
+	     <img width="150" src="{{ event.image_path }}" class="img-circle">
+	 </div>
+	 <div class="span10">
+	     <p>
+		 <i class="icon-calendar"></i>
+		 {{ event.start_date.strftime("%A, %d. %B %Y, %H:%M").decode('utf-8') }} {% if event.end_date %} - {{event.end_date.strftime("%A, %d. %B %Y, %H:%M").decode('utf-8')}}{% endif %}
+	     </p>
+
+	     <p>
+		 <i class="icon-map-marker"></i>
+		 {% if event.location %}
+		 {{ event.location.name }} ({{ event.location.address }})
+		 {% else %}
+		     <span class="muted">Kein Ort angegeben.</span>
+		 {% endif %}
+	     </p>
+
+	     <p>
+		 <i class="icon-comment"></i>
+		 {% if event.description %}
+		     {{ event.description }}
+		 {% else %}
+		     <span class="muted">Keine Beschreibung vorhanden.</span>
+		 {% endif %}
+	     </p>
+
+	     <p>
+		 <i class="icon-user"></i>
+		 Angelegt von {{ event.owner.name }}
+	     </p>
+	 </div>
+     </div>
+{% endblock %}
