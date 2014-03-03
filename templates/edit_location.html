@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>Ort anlegen</h2>
+
+<div class="row">
+        <div class="span8">
+            {% if form.errors %}
+            <div class="alert alert-error">
+            <b>Fehler!</b>
+            <ul>
+            {% for field in form.errors.keys() %}
+                <li><b>{{ field }}:</b> {{ form.errors[field][0] }}</li>
+            {% endfor %}
+            </ul>
+            </div>
+            {% endif %}
+            <form action="" method="POST" enctype="multipart/form-data">
+                        {{ form.name(class="span8", placeholder="Name") }}
+                        {{ form.address(class="span8", placeholder="Adresse") }}
+			{{ form.csrf_token }}
+                                                <p></p>
+                    <button class="btn btn-primary" type="submit">Ort anlegen</button>
+            </form>
+
+
+        </div>
+
+        <div class="span4"></div>
+</div>
+
+<script src="/static/bootstrap/js/wysihtml5-0.3.0.js"></script>
+<script src="/static/bootstrap/js/bootstrap-wysihtml5.js"></script>
+
+<script>
+    $('.textarea').wysihtml5();
+</script>
+{% endblock %}
