@@ -11,8 +11,11 @@ from werkzeug.security import check_password_hash
 
 @login_manager.user_loader
 def get_user(id):
-    user = g.db.query(User).filter(User.id == int(id)).one()
-    return user
+    try:
+        user = g.db.query(User).filter(User.id == int(id)).one()
+        return user
+    except:
+        return None
 
 
 @app.route('/login', methods=['GET', 'POST'])
