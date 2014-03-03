@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>Veranstaltung bearbeiten: {{form.title.data}}</h2>
+
+<div class="row">
+        <div class="span8">
+            {% if form.errors %}
+            <div class="alert alert-error">
+            <b>Fehler!</b>
+            <ul>
+            {% for field in form.errors.keys() %}
+                <li><b>{{ field }}:</b> {{ form.errors[field][0] }}</li>
+            {% endfor %}
+            </ul>
+            </div>
+            {% endif %}
+            <form action="" method="POST" enctype="multipart/form-data">
+                        {{ form.title(class="span8", placeholder="Veranstaltungsname") }}
+                        <div class="input-append date form_datetime" data-date="">
+                                {{ form.start_date(class="span8", placeholder="Veranstaltungsbeginn") }}
+                            <span class="add-on"><i class="icon-remove"></i></span>
+                            <span class="add-on"><i class="icon-calendar"></i></span>
+                        </div>
+                        <div class="input-append date form_datetime" data-date="">
+                                {{ form.end_date(class="span8", placeholder="Veranstaltungsende") }}
+                            <span class="add-on"><i class="icon-remove"></i></span>
+                            <span class="add-on"><i class="icon-calendar"></i></span>
+                        </div>
+     
+ 
+                        <script type="text/javascript">
+                            $(".form_datetime").datetimepicker({
+                                format: "dd.mm.yyyy, hh:ii",
+                                autoclose: true,
+                                todayBtn: true,
+                                minuteStep: 15
+                            });
+                        </script>
+
+                    {{ form.repetition_pattern(class="span8")}}
+                    {{ form.location(class="span8")}}
+                    {{ form.description(class="span8 textarea", placeholder="Beschreibung") }}
+                        <div style="position:relative;">
+                                <a class='btn' href='javascript:;'>
+                                Titelbild auswählen
+                                <input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="image" size="40"  onchange='$("#upload-file-info").html($(this).val());'>
+                                </a>
+                &nbsp;
+                        <span class='label label-info' id="upload-file-info"></span>
+                        </div>
+                        <p></p>
+			{{ form.csrf_token }}
+                    <button class="btn btn-primary" type="submit">&Auml;nderungen speichern</button>
+            </form>
+
+
+        </div>
+
+        <div class="span4"></div>
+</div>
+
+<script src="/static/bootstrap/js/wysihtml5-0.3.0.js"></script>
+<script src="/static/bootstrap/js/bootstrap-wysihtml5.js"></script>
+
+<script>
+    $('.textarea').wysihtml5();
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="row">
+        <div class="span12">
+                <h2>Grüß dich, {{username}} <a href="/logout" class="btn"><i class="icon-lock"></i> Ausloggen</a></h2>
+        </div>
+</div>
+
+<div class="row">
+        <div class="span6">
+                <b><i class="icon-calendar"></i> Veranstaltungen <a href="/admin/events/add"> <i class="icon-plus-sign"></i></a></b>
+                <ul>
+                        {% for e in events %}
+                        <li>{{ e.title }} <a href="/admin/events/delete/{{e.id}}"><i class="icon-remove"></i></a>
+                        <a href="/admin/events/edit/{{e.id}}"><i class="icon-edit"></i></a></li>
+                        {% endfor %}
+                </ul>        </div>
+        <div class="span6">
+                <b><i class="icon-map-marker"></i> Orte <a href="/admin/locations/add"> <i class="icon-plus-sign"></i></a></b>
+                <ul>
+                        {% for l in locations %}
+                        <li>{{ l.name }} <a href="/admin/locations/delete/{{l.id}}"><i class="icon-remove"></i></a><a href="/admin/locations/edit/{{l.id}}"><i class="icon-edit"></i></a></li>
+                        {% endfor %}
+                </ul>
+        </div>
+</div>
+
+{% endblock %}
