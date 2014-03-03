@@ -2,7 +2,7 @@
 import labevents
 from labevents import app
 from labevents.models import Event, Location, Cancelation
-from labevents.util import random_string
+from labevents.util import random_string, crop_square_image
 
 from os.path import join as opj
 
@@ -61,7 +61,8 @@ def create_event():
             filename = random_string(32)+'.'+\
                        form.image.data.mimetype.split("/")[1]
             path = opj(app.config['IMAGE_UPLOAD_PATH'], filename)
-            form.image.data.save(path)
+            image_squared = crop_square_image(form.image.data)
+            image_squared.save(path)
             e.image_path=app.config['IMAGE_UPLOAD_PREFIX']+filename
 
         g.db.add(e)
