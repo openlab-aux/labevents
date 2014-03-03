@@ -2,13 +2,18 @@
 import labevents
 from labevents import app
 from labevents.models import Event, Location, Cancelation
+from labevents.util import random_string
+
+from os.path import join as opj
 
 from flask import g, render_template, redirect
 from flask.ext.login import login_required, current_user
 
 from flask_wtf import Form
-from wtforms import TextField, TextAreaField, DateTimeField, FileField, SelectField
+from wtforms import TextField, TextAreaField, DateTimeField, SelectField, \
+    FileField
 from wtforms import validators
+
 
 @app.route('/admin')
 @login_required
@@ -42,6 +47,7 @@ def create_event():
             Location.id==int(form.location.data
         )).one()
         u = current_user
+                      
         e = Event(title=form.title.data,
                   description=form.description.data,
                   start_date=form.start_date.data,
@@ -50,6 +56,14 @@ def create_event():
                   owner=u,
                   repetition_pattern=int(form.repetition_pattern.data)
         )
+
+        if form.image.data is not None:
+            filename = random_string(32)+'.'+\
+                       form.image.data.mimetype.split("/")[1]
+            path = opj(app.config['IMAGE_UPLOAD_PATH'], filename)
+            form.image.data.save(path)
+            e.image_path=app.config['IMAGE_UPLOAD_PREFIX']+filename
+
         g.db.add(e)
         g.db.commit()
         return redirect('/admin')
