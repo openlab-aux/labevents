@@ -63,11 +63,15 @@ def edit_event(id):
     form = EventForm(obj=e)
     
     if form.validate_on_submit():
+        l = g.db.query(Location).\
+            filter(Location.id == int(form.location.data)).one()
+
         e.title = form.title.data
         e.description = form.description.data
         e.start_date = form.start_date.data
         e.end_date = form.end_date.data
         e.repetition_pattern = int(form.repetition_pattern.data)
+        e.location = l
         g.db.commit()
         return redirect('/admin')
 
@@ -79,5 +83,47 @@ def edit_event(id):
 def delete_event(id):
     e = g.db.query(Event).filter(Event.id == id).one()
     g.db.delete(e)
+    g.db.commit()
+    return redirect('/admin')
+    
+class LocationForm(Form):
+    name = TextField(validators=[validators.Required()])
+    address = TextField(validators=[validators.Required()])
+
+@app.route('/admin/locations/add', methods=['GET', 'POST'])
+@login_required
+def create_location():
+    form = LocationForm()
+
+    if form.validate_on_submit():
+        l = Location(name=form.name.data,
+                     address=form.address.data)
+        g.db.add(l)
+        g.db.commit()
+        return redirect('/admin')
+
+    return render_template("create_location.html",
+                           form=form)
+    
+@app.route('/admin/locations/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_location(id):
+    l = g.db.query(Location).filter(Location.id == id).one()
+    form = LocationForm(obj=l)
+
+    if form.validate_on_submit():
+        l.name = form.name.data
+        l.address = form.address.data
+        g.db.commit()
+        return redirect('/admin')
+
+    return render_template("edit_location.html",
+                           form=form)
+
+@app.route('/admin/locations/delete/<int:id>')
+@login_required
+def delete_location(id):
+    l = g.db.query(Location).filter(Location.id == id).one()
+    g.db.delete(l)
     g.db.commit()
     return redirect('/admin')
