@@ -31,7 +31,7 @@
                 <p>
                     <i class="icon-comment"></i>
                     {% if event.description %}
-                        {{ event.description }}
+                        {{ event.description|safe }}
                     {% else %}
                         <span class="muted">Keine Beschreibung vorhanden.</span>
                     {% endif %}
