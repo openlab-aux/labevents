@@ -19,8 +19,7 @@ def admin_overview():
     
 class EventForm(Form):
     title = TextField(validators=[validators.Required()])
-    location = SelectField(validators=[validators.Required()],
-                           choices=[ (str(l.id), l.name) for l in labevents.database.Session().query(Location).all() ])
+    location = SelectField(validators=[validators.Required()])
     description = TextAreaField(validators=[validators.Required()])
     start_date = DateTimeField(format="%d.%m.%Y, %H:%M", validators=[validators.Required()])
     end_date = DateTimeField(format="%d.%m.%Y, %H:%M")
@@ -28,6 +27,11 @@ class EventForm(Form):
     repetition_pattern = SelectField(choices=[(u"0", "Keine"), (u"1", u"Wöchentlich"), 
                                               (u"2", u"Zweiwöchentlich")], 
                                      validators=[validators.Required()])
+    
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+        self.location.choices = [ (str(l.id), l.name) for l in labevents.database.Session().query(Location).all() ]
+
 @app.route('/admin/events/add', methods=['GET', 'POST'])
 @login_required
 def create_event():
