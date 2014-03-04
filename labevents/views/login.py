@@ -30,7 +30,7 @@ def web_login():
             user = g.db.query(User).filter(User.name == form.username.data).one()
             if check_password_hash(user.passwordhash, form.password.data):
                 login_user(user)
-                return redirect('/lel')
+                return redirect('/admin')
     except sqlalchemy.orm.exc.NoResultFound:
         pass
     return render_template("login.html", form=form)
