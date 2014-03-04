@@ -90,6 +90,14 @@ def edit_event(id):
         e.end_date = form.end_date.data
         e.repetition_pattern = int(form.repetition_pattern.data)
         e.location = l
+        if form.image.data:
+            filename = random_string(32)+'.'+\
+                       form.image.data.mimetype.split("/")[1]
+            path = opj(app.config['IMAGE_UPLOAD_PATH'], filename)
+            image_squared = crop_square_image(form.image.data)
+            image_squared.save(path)
+            e.image_path=app.config['IMAGE_UPLOAD_PREFIX']+filename
+
         g.db.commit()
         return redirect('/admin')
 
