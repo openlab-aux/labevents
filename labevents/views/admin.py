@@ -60,7 +60,7 @@ def create_event():
                   repetition_pattern=int(form.repetition_pattern.data)
         )
 
-        if form.image.data is not None:
+        if form.image.data:
             filename = random_string(32)+'.'+\
                        form.image.data.mimetype.split("/")[1]
             path = opj(app.config['IMAGE_UPLOAD_PATH'], filename)
