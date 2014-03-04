@@ -20,7 +20,10 @@ from wtforms import validators
 def admin_overview():
     locations = g.db.query(Location).all()
     events = g.db.query(Event).all()
-    return render_template("admin.html", events=events, locations=locations)
+    return render_template("admin.html",
+                           user=current_user,
+                           events=events,
+                           locations=locations)
     
 class EventForm(Form):
     title = TextField(validators=[validators.Required()])
