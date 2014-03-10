@@ -49,6 +49,8 @@ def show_events_ical():
         ical_event = icalendar.Event()
         ical_event.add('summary', event.title)
         ical_event.add('dtstart', event.start_date)
+        ical_event.add('url', "http://events.openlab-augsburg.de/events/%i"
+                       % event.id)
         if event.end_date:
             ical_event.add('dtend', event.end_date)
         if event.description:
