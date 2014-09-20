@@ -1,27 +1,42 @@
 # -*- coding: utf-8 -*-
 import labevents
 from labevents import app
-from labevents.models import Event, Location, Cancelation
+from labevents.models import Event, Location, User
 from labevents.util import random_string, crop_square_image
 
 from os.path import join as opj
 
-from flask import g, render_template, redirect
-from flask.ext.login import login_required, current_user
+from flask import g, render_template, redirect, request
+from sqlalchemy.orm.exc import NoResultFound
 
 from flask_wtf import Form
 from wtforms import TextField, TextAreaField, DateTimeField, SelectField, \
     FileField
 from wtforms import validators
 
+def get_current_user():
+    session = request.environ['beaker.session']
+    try:
+        username = session['username']
+    except KeyError:
+        return None
+
+    try:
+        user_obj = g.db.query(User).filter(User.name == username).one()
+        return user_obj
+    except NoResultFound:
+        return None
 
 @app.route('/admin')
-@login_required
+
 def admin_overview():
+    u = get_current_user()
+    if u is None:
+        return redirect('/login')
     locations = g.db.query(Location).all()
     events = g.db.query(Event).all()
     return render_template("admin.html",
-                           user=current_user,
+                           user=u,
                            events=events,
                            locations=locations)
     
@@ -41,15 +56,17 @@ class EventForm(Form):
         self.location.choices = [ (str(l.id), l.name) for l in labevents.database.Session().query(Location).all() ]
 
 @app.route('/admin/events/add', methods=['GET', 'POST'])
-@login_required
 def create_event():
     form = EventForm()
 
     if form.validate_on_submit():
+        u = get_current_user()
+        if u is None:
+            return('/login')
+
         l = g.db.query(Location).filter(
             Location.id==int(form.location.data
         )).one()
-        u = current_user
                       
         e = Event(title=form.title.data,
                   description=form.description.data,
@@ -75,8 +92,11 @@ def create_event():
     return render_template("create_event.html", form=form) 
     
 @app.route('/admin/events/edit/<int:id>', methods=['GET', 'POST'])
-@login_required
 def edit_event(id):
+    u = get_current_user()
+    if u is None:
+        return redirect('/login')
+
     e = g.db.query(Event).filter(Event.id == id).one()
     form = EventForm(obj=e)
     
@@ -105,8 +125,11 @@ def edit_event(id):
                            form=form)
     
 @app.route('/admin/events/delete/<int:id>', methods=['GET'])
-@login_required
 def delete_event(id):
+    u = get_current_user()
+    if u is None:
+        return redirect('/login')
+
     e = g.db.query(Event).filter(Event.id == id).one()
     g.db.delete(e)
     g.db.commit()
@@ -117,8 +140,11 @@ class LocationForm(Form):
     address = TextField(validators=[validators.Required()])
 
 @app.route('/admin/locations/add', methods=['GET', 'POST'])
-@login_required
 def create_location():
+    u = get_current_user()
+    if u is None:
+        return redirect('/login')
+
     form = LocationForm()
 
     if form.validate_on_submit():
@@ -132,8 +158,11 @@ def create_location():
                            form=form)
     
 @app.route('/admin/locations/edit/<int:id>', methods=['GET', 'POST'])
-@login_required
 def edit_location(id):
+    u = get_current_user()
+    if u is None:
+        return redirect('/login')
+
     l = g.db.query(Location).filter(Location.id == id).one()
     form = LocationForm(obj=l)
 
@@ -147,8 +176,11 @@ def edit_location(id):
                            form=form)
 
 @app.route('/admin/locations/delete/<int:id>')
-@login_required
 def delete_location(id):
+    u = get_current_user()
+    if u is None:
+        return redirect('/login')
+
     l = g.db.query(Location).filter(Location.id == id).one()
     g.db.delete(l)
     g.db.commit()
