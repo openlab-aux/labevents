@@ -2,4 +2,7 @@
 *.pyc
 *.db
 *~
+.env
+env
+cache
 /static/uploads/*.*
