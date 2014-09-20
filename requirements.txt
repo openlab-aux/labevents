@@ -1,0 +1,7 @@
+flask
+flask-login
+flask-sqlalchemy
+html2text
+icalendar
+flask-wtf
+Pillow

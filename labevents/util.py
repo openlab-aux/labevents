@@ -1,7 +1,7 @@
 import string
 import random
 
-import Image
+from PIL import Image
 
 def random_string(char_count):
     return "".join([random.choice(string.ascii_letters+string.digits) 
